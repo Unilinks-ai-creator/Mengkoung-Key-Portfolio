@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mengkoung Key — Portfolio
 
-## Getting Started
+Personal portfolio for Mengkoung Key, Product Builder and Entrepreneur based in Barcelona.
 
-First, run the development server:
+Built with Next.js 16 (App Router), TypeScript, Tailwind CSS v4, Framer Motion and next-themes. Fully static — every page prerenders at build time.
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+  app/                Routes (App Router)
+    page.tsx          Home
+    about/            About
+    work/             Work list
+    work/unilinks/    Unilinks case study
+    work/linky/       Linky case study
+    thinking/         Articles
+    experiments/      Experiments
+    contact/          Contact
+    layout.tsx        Root layout (Inter, theme, nav, footer)
+    globals.css       Design tokens (colors, spacing, motion)
+  components/         Reusable primitives (Navbar, Footer, Button, Reveal, etc.)
+  lib/content.ts      All copy, projects, articles, experiments
+```
 
-## Learn More
+To add or edit a project: update `src/lib/content.ts`. Case-study pages live under `src/app/work/<slug>/page.tsx`.
 
-To learn more about Next.js, take a look at the following resources:
+## Design system
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Font**: Inter (via `next/font/google`)
+- **Themes**: light and dark, controlled by `next-themes` (`◐` toggle in nav)
+- **Palette**: warm off-white, black, subtle green accent (`#35C878`) — used for status dots only
+- **Motion**: quiet `cubic-bezier(0.16, 1, 0.3, 1)` easing; respects `prefers-reduced-motion`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy to Vercel
 
-## Deploy on Vercel
+**Option A — via GitHub (recommended):**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Create a new repo on GitHub (e.g. `mengkoung-portfolio`).
+2. From this folder:
+   ```bash
+   git add .
+   git commit -m "Initial portfolio"
+   git branch -M main
+   git remote add origin git@github.com:<you>/<repo>.git
+   git push -u origin main
+   ```
+3. On Vercel → **New Project** → import the repo. No env vars needed. Click Deploy.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Option B — via Vercel CLI:**
+
+```bash
+npm i -g vercel
+vercel        # first run links the project
+vercel --prod # production deploy
+```
+
+## Adding Firebase later
+
+Install when you're ready:
+
+```bash
+npm install firebase
+```
+
+Put your config in `.env.local` (`NEXT_PUBLIC_FIREBASE_*` vars) and initialise a client in `src/lib/firebase.ts`. Add the same env vars in Vercel → Project Settings → Environment Variables.
+
+## Notes
+
+- Placeholder product visuals live in `src/components/project-preview.tsx` — swap for real screenshots when available.
+- Portrait placeholder in `src/components/portrait-placeholder.tsx` — replace with a monochrome photo (`public/portrait.jpg`) and update the About page.
