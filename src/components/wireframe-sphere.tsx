@@ -5,6 +5,8 @@ type Props = {
   strokeOpacity?: number;
 };
 
+const round = (n: number) => Math.round(n * 1000) / 1000;
+
 export function WireframeSphere({
   size = 480,
   className = "",
@@ -20,7 +22,7 @@ export function WireframeSphere({
 
   const meridianPaths = Array.from({ length: meridians }, (_, i) => {
     const t = i / meridians;
-    const rx = Math.abs(Math.cos(t * Math.PI)) * r;
+    const rx = round(Math.abs(Math.cos(t * Math.PI)) * r);
     return (
       <ellipse
         key={`m-${i}`}
@@ -38,15 +40,15 @@ export function WireframeSphere({
 
   const parallelPaths = Array.from({ length: parallels }, (_, i) => {
     const t = (i + 1) / (parallels + 1);
-    const y = cy - r + t * 2 * r;
-    const rx = Math.sqrt(Math.max(0, r * r - (y - cy) * (y - cy)));
+    const y = round(cy - r + t * 2 * r);
+    const rx = round(Math.sqrt(Math.max(0, r * r - (y - cy) * (y - cy))));
     return (
       <ellipse
         key={`p-${i}`}
         cx={cx}
         cy={y}
         rx={rx}
-        ry={rx * 0.18}
+        ry={round(rx * 0.18)}
         fill="none"
         stroke={stroke}
         strokeOpacity={strokeOpacity}

@@ -23,7 +23,7 @@ export const SEED_PROJECTS: FeaturedWork[] = [
     role: "Co-founder · Designed, architected & built end-to-end",
     lede: "A global education platform helping international students find and apply to universities across Asia and Europe.",
     body: "I co-founded Unilinks in 2023 and built the full stack — the marketplace, the University CMS, our internal CRM, and the Mentor and Student portals.",
-    traction: "120+ enrolled students · 40+ university partners · 500+ programs",
+    traction: "1,000+ students · 59 university partners · AI-native workflow",
     href: "https://unilinks.co",
     external: true,
     slides: [
@@ -34,6 +34,7 @@ export const SEED_PROJECTS: FeaturedWork[] = [
       { name: "Student Portal" },
     ],
     tags: ["Education", "Product Design", "Product Management", "Full-Stack", "Testing"],
+    brand: { bg: "#B9EBD6", mode: "light" },
   },
   {
     slug: "startupack",
@@ -53,6 +54,7 @@ export const SEED_PROJECTS: FeaturedWork[] = [
       { name: "Scale" },
     ],
     tags: ["SaaS", "Product Design", "Full-Stack", "Frontend", "Integrations"],
+    brand: { bg: "#E63946", mode: "dark" },
   },
   {
     slug: "classora",
@@ -74,6 +76,7 @@ export const SEED_PROJECTS: FeaturedWork[] = [
       { name: "Platform Admin" },
     ],
     tags: ["EdTech", "Product Design", "Product Management", "Full-Stack", "AI"],
+    brand: { bg: "#DCE4FF", mode: "light" },
   },
   {
     slug: "unimate",
@@ -94,6 +97,7 @@ export const SEED_PROJECTS: FeaturedWork[] = [
       { name: "Concierge" },
     ],
     tags: ["Community", "Product Design", "Product Management", "Full-Stack", "Operations"],
+    brand: { bg: "#F97316", mode: "dark" },
   },
   {
     slug: "norea-city",
@@ -104,7 +108,6 @@ export const SEED_PROJECTS: FeaturedWork[] = [
     role: "Product builder for OCIC · Canadia Bank",
     lede: "The digital home for a 125-hectare mixed-use riverside development in Phnom Penh.",
     body: "OCIC and Canadia Bank hired me in 2026 to design and build the marketing platform from scratch — giving their sales and leasing teams their first proper online presence for Norea Square, The Ground Market, the townhouses and the 4.2-km Koh Norea Parkway.",
-    traction: "Client work · OCIC × Canadia Bank",
     href: "https://norea.city",
     external: true,
     slides: [
@@ -115,6 +118,7 @@ export const SEED_PROJECTS: FeaturedWork[] = [
       { name: "Koh Norea Parkway" },
     ],
     tags: ["Real Estate", "Product Design", "Full-Stack", "Branding", "SEO"],
+    brand: { bg: "#1F2E24", mode: "dark" },
   },
 ];
 
@@ -124,6 +128,12 @@ function toDoc(project: FeaturedWork, order: number): ProjectDoc {
   return { ...project, order };
 }
 
+function withSeedBrand(project: FeaturedWork): FeaturedWork {
+  if (project.brand) return project;
+  const seed = SEED_PROJECTS.find((p) => p.slug === project.slug);
+  return seed?.brand ? { ...project, brand: seed.brand } : project;
+}
+
 export async function getFeaturedWork(): Promise<FeaturedWork[]> {
   try {
     const q = query(collection(db, COLLECTION), orderBy("order", "asc"));
@@ -131,7 +141,7 @@ export async function getFeaturedWork(): Promise<FeaturedWork[]> {
     if (snap.empty) return SEED_PROJECTS;
     return snap.docs.map((d) => {
       const { order: _order, ...rest } = d.data() as ProjectDoc;
-      return rest as FeaturedWork;
+      return withSeedBrand(rest as FeaturedWork);
     });
   } catch {
     return SEED_PROJECTS;

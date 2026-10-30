@@ -1,113 +1,127 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/reveal";
-import { WireframeSphere } from "@/components/wireframe-sphere";
-import { ButtonLink } from "@/components/button";
+import { Accent } from "@/components/section-chrome";
+import { EmailCta } from "./email-cta";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Get in touch with Mengkoung Key — open to opportunities, collaborations and problems worth solving.",
+    "Get in touch with Mengkoung Key — open to product roles, founder collaborations and problems worth solving. Based in Barcelona, working anywhere.",
 };
+
+const EMAIL = "keymengkoung8@gmail.com";
+
+const LINKEDIN = "https://linkedin.com/in/mengkoungkey";
 
 export default function ContactPage() {
   return (
-    <section className="container-wide pt-10 md:pt-16 pb-24 md:pb-32">
-      <Reveal>
-        <p className="text-label text-muted flex items-center gap-2">
-          <span
-            aria-hidden
-            className="inline-block w-1.5 h-1.5 rounded-full"
-            style={{ background: "var(--accent)" }}
-          />
-          Contact
-        </p>
-      </Reveal>
+    <section className="relative overflow-hidden">
+      {/* Soft ambient background — replaces the wireframe sphere */}
+      <BackgroundField />
 
-      <div className="mt-8 md:mt-10 grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-        <div>
-          <Reveal delay={0.05}>
-            <h1 className="text-display">
-              Let&apos;s work
-              <br />
-              together.
-            </h1>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <p className="mt-8 max-w-[520px] text-[17px] md:text-[18px] leading-[1.6] text-muted">
-              I&apos;m open to product roles, founder collaborations and
-              interesting problems — especially at the intersection of AI,
-              education and consumer product. Based in Barcelona, working
-              anywhere.
-            </p>
-          </Reveal>
-          <Reveal delay={0.18}>
-            <div className="mt-10">
-              <ButtonLink href="mailto:mengkoung.key@gmail.com">
-                Get in touch <span aria-hidden className="hover-arrow">→</span>
-              </ButtonLink>
-            </div>
-          </Reveal>
-        </div>
+      <div className="relative container-wide pt-14 md:pt-32 pb-16 md:pb-24 text-center">
+        <Reveal>
+          <p className="inline-flex items-center gap-2 md:gap-2.5 text-[10.5px] md:text-[15px] tracking-[0.16em] md:tracking-[0.22em] uppercase text-muted">
+            <span className="relative inline-flex w-2 h-2">
+              <span
+                aria-hidden
+                className="absolute inset-0 rounded-full animate-ping opacity-75"
+                style={{ background: "var(--accent)" }}
+              />
+              <span
+                aria-hidden
+                className="relative inline-block w-2 h-2 rounded-full"
+                style={{ background: "var(--accent)" }}
+              />
+            </span>
+            <span className="hidden sm:inline">
+              Available — Replies within 24 hours
+            </span>
+            <span className="sm:hidden">Available · 24h reply</span>
+          </p>
+        </Reveal>
 
-        <div className="relative h-[280px] md:h-[400px]">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <WireframeSphere
-              size={420}
-              className="w-[80%] max-w-[420px] text-fg/45"
-              strokeOpacity={0.28}
-            />
+        <Reveal delay={0.05}>
+          <h1 className="mt-6 md:mt-8 text-[52px] sm:text-[88px] md:text-[120px] lg:text-[160px] font-bold leading-[0.95] tracking-[-0.045em]">
+            Say hello<Accent>.</Accent>
+          </h1>
+        </Reveal>
+
+        <Reveal delay={0.12}>
+          <p className="mt-7 md:mt-10 max-w-2xl mx-auto text-[16px] md:text-[22px] leading-[1.55] text-muted">
+            I&apos;m open to product roles, founder collaborations and real
+            problems — especially at the intersection of{" "}
+            <span className="text-fg font-medium">AI</span>,{" "}
+            <span className="text-fg font-medium">education</span> and{" "}
+            <span className="text-fg font-medium">consumer product</span>.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.18}>
+          <div className="mt-12 md:mt-14 flex justify-center">
+            <EmailCta email={EMAIL} />
           </div>
-        </div>
-      </div>
+        </Reveal>
 
-      <div className="mt-20 md:mt-28 grid gap-8 md:grid-cols-4 border-t border-border pt-10 md:pt-12">
-        <ContactCol label="Email">
-          <a
-            href="mailto:mengkoung.key@gmail.com"
-            className="text-[15px] hover:text-muted transition-colors"
-          >
-            mengkoung.key@gmail.com
-          </a>
-        </ContactCol>
-        <ContactCol label="Location">
-          <span className="text-[15px]">Barcelona, Spain</span>
-        </ContactCol>
-        <ContactCol label="LinkedIn">
-          <a
-            href="https://linkedin.com/in/mengkoungkey"
-            target="_blank"
-            rel="noreferrer"
-            className="text-[15px] hover:text-muted transition-colors"
-          >
-            linkedin.com/in/mengkoungkey
-          </a>
-        </ContactCol>
-        <ContactCol label="Website">
-          <a
-            href="https://unilinks.co"
-            target="_blank"
-            rel="noreferrer"
-            className="text-[15px] hover:text-muted transition-colors"
-          >
-            unilinks.co
-          </a>
-        </ContactCol>
+        <Reveal delay={0.32}>
+          <div className="mt-20 md:mt-28 flex items-center justify-center text-[16px] md:text-[18px]">
+            <a
+              href={LINKEDIN}
+              target="_blank"
+              rel="noreferrer"
+              className="group inline-flex items-center gap-2 text-fg hover:text-muted transition-colors"
+            >
+              <span className="underline underline-offset-4 decoration-border group-hover:decoration-fg transition-colors">
+                Or find me on LinkedIn
+              </span>
+              <span
+                aria-hidden
+                className="text-[13px] text-muted group-hover:text-fg group-hover:translate-x-0.5 transition-all"
+              >
+                ↗
+              </span>
+            </a>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.4}>
+          <p className="mt-10 text-[14px] md:text-[15px] text-muted">
+            Based in Barcelona · Working anywhere
+          </p>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-function ContactCol({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function BackgroundField() {
   return (
-    <div>
-      <p className="text-label text-muted">{label}</p>
-      <div className="mt-3">{children}</div>
+    <div aria-hidden className="absolute inset-0 pointer-events-none">
+      {/* Subtle vertical gradient */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(180deg, var(--bg) 0%, color-mix(in oklab, var(--fg) 2%, var(--bg)) 60%, var(--bg) 100%)",
+        }}
+      />
+      {/* Faint grid */}
+      <div
+        className="absolute inset-0 opacity-[0.05]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, var(--fg) 1px, transparent 1px), linear-gradient(to bottom, var(--fg) 1px, transparent 1px)",
+          backgroundSize: "72px 72px",
+        }}
+      />
+      {/* Soft focal glow — replaces the sphere */}
+      <div
+        className="absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 w-[70vw] max-w-[1000px] aspect-square rounded-full blur-3xl opacity-[0.22]"
+        style={{
+          background:
+            "radial-gradient(circle, color-mix(in oklab, var(--accent) 55%, transparent) 0%, transparent 65%)",
+        }}
+      />
     </div>
   );
 }

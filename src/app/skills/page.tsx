@@ -1,97 +1,108 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Reveal } from "@/components/reveal";
-import { languages, skillGroups } from "@/lib/content";
+import {
+  Accent,
+  SectionChrome,
+  SectionHeader,
+} from "@/components/section-chrome";
+import { skillGroups, languages } from "@/lib/content";
+import { SkillsExplorer } from "./skills-explorer";
+
+const languagesGroup = {
+  title: "Languages",
+  description:
+    "Five languages, learned across sixteen countries. I started with zero English — now I work in five of them.",
+  skills: languages.map((l) => `${l.name} — ${l.level}`),
+};
+
+const allGroups = [...skillGroups, languagesGroup];
 
 export const metadata: Metadata = {
   title: "Skills",
   description:
-    "Product, marketing, design, business and operations — the toolkit Mengkoung Key has built across six ventures and a Master's in Digital Marketing.",
+    "The toolkit Mengkoung Key brings to the table — Product & Strategy, Marketing & Growth, Design, AI & Engineering, Business & Operations and daily Tools.",
 };
 
 export default function SkillsPage() {
   return (
     <>
-      <section className="container-wide pt-10 md:pt-16 pb-6 md:pb-10">
+      <section className="container-wide pt-16 md:pt-24 pb-8 md:pb-16">
         <Reveal>
-          <p className="text-label text-muted flex items-center gap-2">
-            <span
-              aria-hidden
-              className="inline-block w-1.5 h-1.5 rounded-full"
-              style={{ background: "var(--accent)" }}
-            />
-            Skills
-          </p>
+          <SectionChrome label="Skills" />
         </Reveal>
 
-        <div className="mt-6 md:mt-8 grid gap-6 md:grid-cols-[1.5fr_1fr] md:items-end">
-          <Reveal delay={0.05}>
-            <h1 className="text-display">The toolkit.</h1>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="text-[15px] md:text-[17px] text-muted max-w-[440px] md:justify-self-end">
-              Built across six ventures, a Bachelor&apos;s in Entrepreneurship
-              and a Master&apos;s in Digital Marketing. Now sharpening the
-              product side at Harbour.Space Barcelona.
-            </p>
-          </Reveal>
-        </div>
+        <Reveal delay={0.05}>
+          <SectionHeader
+            heading={
+              <>
+                What I bring to the table<Accent>.</Accent>
+              </>
+            }
+            description="Six years of building across ventures, a Master's in Digital Marketing, and a Master's in Product Management at Harbour.Space Barcelona — Highest GPA, Batch of 2026."
+            headingMax="none"
+          />
+        </Reveal>
       </section>
 
-      <section className="container-wide mt-16 md:mt-24 mb-16 md:mb-24">
-        <div className="grid gap-14 md:gap-20">
-          {skillGroups.map((group, i) => (
-            <Reveal key={group.title} delay={i * 0.04}>
-              <div className="grid gap-8 md:grid-cols-[1fr_1.6fr] md:gap-16 border-t border-border pt-10 md:pt-12">
-                <div>
-                  <p className="text-[13px] text-muted">
-                    0{i + 1} / 0{skillGroups.length}
-                  </p>
-                  <h2 className="mt-2 text-[26px] md:text-[32px] font-semibold tracking-tight">
-                    {group.title}
-                  </h2>
-                  <p className="mt-4 max-w-[360px] text-[14.5px] md:text-[15px] text-muted leading-[1.6]">
-                    {group.description}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2 md:gap-3 md:pt-2 self-start">
-                  {group.skills.map((s) => (
-                    <span
-                      key={s}
-                      className="rounded-full border border-border px-4 py-2 text-[13.5px] text-fg hover:border-fg/40 transition-colors"
-                    >
-                      {s}
-                    </span>
-                  ))}
-                </div>
+      <section className="container-wide pb-16 md:pb-24">
+        <Reveal>
+          <SkillsExplorer groups={allGroups} />
+        </Reveal>
+      </section>
+
+      <section className="container-wide">
+        <Reveal>
+          <div
+            data-cursor="light"
+            className="relative overflow-hidden rounded-[24px] bg-[#0d0d0d] text-white px-8 md:px-16 py-14 md:py-20"
+          >
+            <div className="absolute inset-0 pointer-events-none opacity-40">
+              <div
+                className="absolute -right-40 top-1/2 -translate-y-1/2 w-[900px] h-[400px] rotate-[-8deg] blur-2xl"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at center, rgba(255,255,255,0.14), transparent 60%)",
+                }}
+              />
+            </div>
+
+            <div className="relative">
+              <p className="text-[13px] md:text-[14px] font-medium text-white/55">
+                Want the long version?
+              </p>
+              <p className="mt-7 md:mt-9 text-[26px] sm:text-[34px] md:text-[44px] leading-[1.1] tracking-[-0.02em] font-medium max-w-[22ch]">
+                From a D grade and zero English to Highest GPA at Harbour.Space.
+              </p>
+              <p className="mt-5 md:mt-6 text-[14px] md:text-[15px] text-white/60 max-w-[52ch] leading-[1.6]">
+                The full story of how I built this toolkit — six years of
+                shipping, learning, and figuring it out.
+              </p>
+
+              <div className="mt-10 md:mt-12 pt-8 md:pt-10 border-t border-white/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+                <Link
+                  href="/about"
+                  className="group inline-flex items-center gap-3 self-start sm:self-auto rounded-full bg-white text-black pl-5 pr-1.5 py-1.5 md:pl-6 md:pr-2 md:py-2 text-[14px] md:text-[15px] font-medium hover:bg-white/90 transition-all shadow-lg shadow-black/30"
+                >
+                  <span>Read the full story</span>
+                  <span
+                    className="inline-flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-full text-[13px] text-black transition-transform duration-300 group-hover:translate-x-0.5"
+                    style={{ background: "var(--accent)" }}
+                  >
+                    →
+                  </span>
+                </Link>
+
+                <Link
+                  href="/contact"
+                  className="text-[14px] md:text-[15px] font-medium text-white/60 hover:text-white transition-colors underline underline-offset-4 decoration-white/20 hover:decoration-white/60"
+                >
+                  or email me directly
+                </Link>
               </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <section className="container-wide mt-8 md:mt-16 mb-24 md:mb-32">
-        <div className="grid gap-8 md:grid-cols-[1fr_1.6fr] md:gap-16 border-t border-border pt-10 md:pt-12">
-          <div>
-            <p className="text-[13px] text-muted">Languages</p>
-            <h2 className="mt-2 text-[26px] md:text-[32px] font-semibold tracking-tight">
-              Five languages.
-            </h2>
-            <p className="mt-4 max-w-[360px] text-[14.5px] md:text-[15px] text-muted leading-[1.6]">
-              I&apos;ve lived, studied and worked in 14 countries. Language is
-              how I keep building bridges between them.
-            </p>
+            </div>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 self-start">
-            {languages.map((l, i) => (
-              <Reveal key={l.name} delay={i * 0.03}>
-                <p className="text-[17px] font-medium tracking-tight">
-                  {l.name}
-                </p>
-                <p className="mt-1 text-[13px] text-muted">{l.level}</p>
-              </Reveal>
-            ))}
-          </div>
-        </div>
+        </Reveal>
       </section>
     </>
   );

@@ -263,6 +263,10 @@ button:hover .hover-arrow {
   background: var(--accent);
 }
 
+.cursor-dot[data-mode="light"] {
+  background: #ffffff;
+}
+
 @media (hover: none), (pointer: coarse) {
   .cursor-dot {
     display: none;

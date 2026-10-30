@@ -25,7 +25,12 @@ export function Cursor() {
       const hit = target?.closest?.(
         'a, button, [role="button"], input, textarea, select, label, summary, [data-cursor="hover"]'
       );
-      dot.dataset.mode = hit ? "hover" : "default";
+      if (hit) {
+        dot.dataset.mode = "hover";
+        return;
+      }
+      const dark = target?.closest?.('[data-cursor="light"]');
+      dot.dataset.mode = dark ? "light" : "default";
     };
 
     document.documentElement.classList.add("has-custom-cursor");

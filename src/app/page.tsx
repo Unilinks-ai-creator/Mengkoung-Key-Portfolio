@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Reveal } from "@/components/reveal";
 import { ParticleText } from "@/components/particle-text";
-import { ProjectCard } from "@/components/project-card";
+import { ProjectSlides } from "@/components/project-slides";
 import {
   Accent,
   CtaButton,
@@ -9,6 +9,7 @@ import {
   SectionHeader,
 } from "@/components/section-chrome";
 import { FaqItem } from "@/components/faq-item";
+import { EmailCopyButton } from "@/components/email-copy-button";
 import { experience, education } from "@/lib/content";
 import { getFeaturedWork } from "@/lib/projects";
 
@@ -245,31 +246,27 @@ function SelectedWork({
   projects: import("@/lib/content").FeaturedWork[];
 }) {
   return (
-    <section className="container-wide pt-16 md:pt-24 pb-8 md:pb-16">
-      <Reveal>
-        <SectionChrome label="Featured Works" />
-      </Reveal>
+    <>
+      <section className="container-wide pt-16 md:pt-24 pb-4 md:pb-8">
+        <Reveal>
+          <SectionChrome label="Featured Works" />
+        </Reveal>
 
-      <Reveal delay={0.05}>
-        <SectionHeader
-          heading={
-            <>
-              Selected Work<Accent>.</Accent>
-            </>
-          }
-          description="Five ventures across education, SaaS and community — each designed, engineered and shipped end-to-end."
-          cta={{ label: "View all projects", href: "/work" }}
-        />
-      </Reveal>
+        <Reveal delay={0.05}>
+          <SectionHeader
+            heading={
+              <>
+                Selected Work<Accent>.</Accent>
+              </>
+            }
+            description="Five ventures across education, SaaS and community — each designed, engineered and shipped end-to-end."
+            cta={{ label: "View all projects", href: "/work" }}
+          />
+        </Reveal>
+      </section>
 
-      <div className="mt-10 md:mt-14 grid gap-6 md:gap-8 md:grid-cols-2">
-        {projects.map((project, i) => (
-          <Reveal key={project.slug} delay={0.05 + (i % 2) * 0.05}>
-            <ProjectCard project={project} />
-          </Reveal>
-        ))}
-      </div>
-    </section>
+      <ProjectSlides projects={projects} />
+    </>
   );
 }
 
@@ -324,8 +321,14 @@ function Approach() {
               }}
             >
               <div className="flex items-start justify-between">
-                <span className="font-semibold text-[56px] md:text-[64px] leading-none tracking-[-0.03em]">
-                  {s.step}
+                <span
+                  className="font-semibold text-[56px] md:text-[64px] leading-none tracking-[-0.04em] tabular-nums"
+                  style={{ color: "var(--accent)" }}
+                >
+                  {s.weight}
+                  <span className="text-fg/40 text-[32px] md:text-[36px] font-normal align-top ml-1">
+                    %
+                  </span>
                 </span>
                 <span aria-hidden className="flex items-center gap-1.5 pt-3">
                   {[0, 1, 2].map((d) => (
@@ -362,30 +365,6 @@ function Approach() {
         ))}
       </div>
 
-      <div className="mt-10 md:mt-14 grid gap-8 md:gap-16 md:grid-cols-2 items-start">
-        <Reveal>
-          <CtaButton label="Contact now" href="/contact" />
-        </Reveal>
-
-        <Reveal delay={0.05}>
-          <ul className="w-full flex flex-col">
-            {approachSteps.map((s) => (
-              <li
-                key={s.step}
-                className="flex items-center justify-between py-4 border-b border-border last:border-b-0 text-[14px] md:text-[15px]"
-              >
-                <span className="text-fg font-medium">{s.title}</span>
-                <span
-                  className="font-mono tabular-nums"
-                  style={{ color: "var(--accent)" }}
-                >
-                  {s.weight}%
-                </span>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-      </div>
     </section>
   );
 }
@@ -447,7 +426,7 @@ function Services() {
           <Reveal key={s.n} delay={0.05 + (i % 2) * 0.05}>
             <article className="group h-full rounded-[20px] border border-border bg-fg/[0.02] hover:bg-fg/[0.035] transition-colors p-6 md:p-8 flex flex-col md:flex-row md:items-start gap-4 md:gap-8">
               <span
-                className="font-mono text-[13px] md:text-[14px] tabular-nums shrink-0 md:pt-2"
+                className="text-[13px] md:text-[14px] font-medium tabular-nums shrink-0 md:pt-2"
                 style={{ color: "var(--accent)" }}
               >
                 ({s.n})
@@ -476,22 +455,19 @@ function Services() {
 
 const stats = [
   {
-    n: "03+",
-    unit: "years",
-    label: "Building products",
-    body: "Shipping ventures full-stack since 2023 — design, engineering and go-to-market in one head.",
-  },
-  {
     n: "05",
-    unit: "live",
-    label: "Ventures in production",
-    body: "Unilinks, Startupack, Classora, Unimate, Norea City — each designed and shipped end-to-end.",
+    label: "Products shipped",
+    body: "Unilinks, Startupack, Classora, Unimate and Norea City — each designed, built and launched end-to-end.",
   },
   {
-    n: "120+",
-    unit: "onboarded",
-    label: "Students placed",
-    body: "International students matched to universities across Asia and Europe through Unilinks.",
+    n: "12+",
+    label: "Portals & modules built",
+    body: "Marketing sites, admin dashboards, CRMs, mentor and student portals across the five ventures.",
+  },
+  {
+    n: "08+",
+    label: "Technologies in stack",
+    body: "Next.js, React, TypeScript, Tailwind, Node, Firebase, Supabase, Framer Motion — one builder, one stack.",
   },
 ];
 
@@ -519,17 +495,14 @@ function Stats() {
           {stats.map((s, i) => (
             <Reveal key={s.label} delay={0.05 + i * 0.05}>
               <article className="p-8 md:p-10 h-full flex flex-col">
-                <p className="font-mono text-[11px] md:text-[12px] tracking-[0.22em] uppercase text-muted">
+                <p className="text-[13px] md:text-[14px] font-medium text-muted">
                   {s.label}
                 </p>
                 <p
-                  className="mt-6 text-[80px] md:text-[120px] font-bold leading-[0.9] tracking-[-0.05em]"
+                  className="mt-6 text-[80px] md:text-[120px] font-bold leading-[0.9] tracking-[-0.04em]"
                   style={{ color: "var(--accent)" }}
                 >
                   {s.n}
-                  <span className="text-fg/30 text-[24px] md:text-[32px] font-normal align-top ml-2">
-                    {s.unit}
-                  </span>
                 </p>
                 <p className="mt-6 text-[14px] md:text-[15px] leading-[1.65] text-muted">
                   {s.body}
@@ -564,16 +537,16 @@ function SpeedHighlight() {
       <div className="mt-10 md:mt-14 grid gap-6 md:gap-6 md:grid-cols-3">
         <Reveal delay={0.05}>
           <article className="h-full rounded-[24px] border border-border bg-fg/[0.02] p-8 md:p-10">
-            <p className="font-mono text-[12px] tracking-[0.18em] uppercase text-muted">
-              Time to launch
+            <p className="text-[13px] md:text-[14px] font-medium text-muted">
+              Weeks to launch
             </p>
             <p
               className="mt-4 text-[72px] md:text-[104px] font-bold leading-[0.95] tracking-[-0.04em]"
               style={{ color: "var(--accent)" }}
             >
-              4<span className="text-fg/40 text-[36px] md:text-[44px] font-normal align-top">wks</span>
+              4
             </p>
-            <p className="mt-4 text-[15px] leading-[1.6] text-muted">
+            <p className="mt-4 text-[14px] md:text-[15px] leading-[1.65] text-muted">
               From kickoff to a launched MVP. Right-sized, production-ready, live in front of users.
             </p>
           </article>
@@ -581,33 +554,33 @@ function SpeedHighlight() {
 
         <Reveal delay={0.1}>
           <article className="h-full rounded-[24px] border border-border bg-fg/[0.02] p-8 md:p-10">
-            <p className="font-mono text-[12px] tracking-[0.18em] uppercase text-muted">
-              Team size
+            <p className="text-[13px] md:text-[14px] font-medium text-muted">
+              People on the team
             </p>
             <p
               className="mt-4 text-[72px] md:text-[104px] font-bold leading-[0.95] tracking-[-0.04em]"
               style={{ color: "var(--accent)" }}
             >
-              1<span className="text-fg/40 text-[36px] md:text-[44px] font-normal align-top">person</span>
+              1
             </p>
-            <p className="mt-4 text-[15px] leading-[1.6] text-muted">
-              Design + code + strategy + ops in one head. No hand-offs, no telephone game, no dropped context.
+            <p className="mt-4 text-[14px] md:text-[15px] leading-[1.65] text-muted">
+              Design, code, strategy and ops in one head. No hand-offs, no telephone game, no dropped context.
             </p>
           </article>
         </Reveal>
 
         <Reveal delay={0.15}>
           <article className="h-full rounded-[24px] border border-border bg-fg/[0.02] p-8 md:p-10">
-            <p className="font-mono text-[12px] tracking-[0.18em] uppercase text-muted">
-              Ventures shipped
+            <p className="text-[13px] md:text-[14px] font-medium text-muted">
+              Live ventures
             </p>
             <p
               className="mt-4 text-[72px] md:text-[104px] font-bold leading-[0.95] tracking-[-0.04em]"
               style={{ color: "var(--accent)" }}
             >
-              5<span className="text-fg/40 text-[36px] md:text-[44px] font-normal align-top">live</span>
+              5
             </p>
-            <p className="mt-4 text-[15px] leading-[1.6] text-muted">
+            <p className="mt-4 text-[14px] md:text-[15px] leading-[1.65] text-muted">
               End-to-end, in production, in the last three years. Not decks — running products.
             </p>
           </article>
@@ -758,32 +731,26 @@ function ContactCta() {
       </Reveal>
 
       <Reveal delay={0.1}>
-        <div className="mt-10 md:mt-14 flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6">
-          <CtaButton label="Get in touch" href="/contact" />
-          <a
-            href="mailto:mengkoung.key@gmail.com"
-            className="text-[14px] md:text-[15px] font-medium text-muted hover:text-fg transition-colors underline underline-offset-4 decoration-border hover:decoration-fg"
-          >
-            mengkoung.key@gmail.com
-          </a>
+        <div className="mt-10 md:mt-14 flex justify-center">
+          <EmailCopyButton email="keymengkoung8@gmail.com" />
         </div>
       </Reveal>
 
       <Reveal delay={0.15}>
         <div className="mt-14 md:mt-20 grid gap-6 md:grid-cols-3 text-center">
           <div>
-            <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted">
+            <p className="text-[13px] md:text-[14px] font-medium text-muted">
               Location
             </p>
-            <p className="mt-3 text-[16px] font-medium text-fg">
+            <p className="mt-2 text-[16px] font-medium text-fg">
               Barcelona, Spain
             </p>
           </div>
           <div>
-            <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted">
+            <p className="text-[13px] md:text-[14px] font-medium text-muted">
               Availability
             </p>
-            <p className="mt-3 text-[16px] font-medium text-fg">
+            <p className="mt-2 text-[16px] font-medium text-fg">
               <span
                 aria-hidden
                 className="inline-block w-2 h-2 rounded-full mr-2 align-middle"
@@ -793,10 +760,10 @@ function ContactCta() {
             </p>
           </div>
           <div>
-            <p className="font-mono text-[11px] tracking-[0.22em] uppercase text-muted">
+            <p className="text-[13px] md:text-[14px] font-medium text-muted">
               Response time
             </p>
-            <p className="mt-3 text-[16px] font-medium text-fg">
+            <p className="mt-2 text-[16px] font-medium text-fg">
               Within 24 hours
             </p>
           </div>
