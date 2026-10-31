@@ -20,6 +20,54 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Freelance inquiries submitted via the public contact form.
+    //
+    // Anyone can CREATE a document (with shape + length validation).
+    // Only the admin can READ / UPDATE / DELETE.
+    match /inquiries/{id} {
+      allow read: if isAdmin();
+      allow update, delete: if isAdmin();
+
+      allow create: if
+        // Required string fields with length bounds
+        request.resource.data.name is string
+          && request.resource.data.name.size() >= 2
+          && request.resource.data.name.size() <= 100
+
+          && request.resource.data.email is string
+          && request.resource.data.email.size() >= 5
+          && request.resource.data.email.size() <= 200
+          && request.resource.data.email.matches('.*@.*\\..*')
+
+          && request.resource.data.message is string
+          && request.resource.data.message.size() >= 30
+          && request.resource.data.message.size() <= 2000
+
+          // Required enum-ish fields
+          && request.resource.data.stage in ['idea', 'brief', 'mockups', 'rebuild']
+          && request.resource.data.status == 'new'
+
+          // Required array (at least one project type)
+          && request.resource.data.projectTypes is list
+          && request.resource.data.projectTypes.size() >= 1
+          && request.resource.data.projectTypes.size() <= 5
+
+          // Required budget object (either {skipped:true} or {amount, currency})
+          && request.resource.data.budget is map
+          && (
+               request.resource.data.budget.skipped == true
+               || (
+                    request.resource.data.budget.amount is number
+                    && request.resource.data.budget.amount > 0
+                    && request.resource.data.budget.currency in
+                      ['EUR','USD','GBP','JPY','THB','KHR','SGD','OTHER']
+                  )
+             )
+
+          // createdAt must be the server timestamp
+          && request.resource.data.createdAt == request.time;
+    }
+
     // Deny everything else by default.
     match /{document=**} {
       allow read, write: if false;

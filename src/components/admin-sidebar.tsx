@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { signOut, type User } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { subscribeToInquiries } from "@/lib/inquiries";
 
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: DashboardIcon, exact: true },
+  { href: "/admin/inquiries", label: "Inquiries", icon: InboxIcon },
   { href: "/admin/projects", label: "Projects", icon: ProjectsIcon },
   { href: "/admin/about", label: "About", icon: UserIcon },
   { href: "/admin/contact", label: "Contact", icon: MailIcon },
@@ -15,6 +18,14 @@ const NAV = [
 
 export function AdminSidebar({ user }: { user: User }) {
   const pathname = usePathname() ?? "";
+  const [newInquiryCount, setNewInquiryCount] = useState<number>(0);
+
+  useEffect(() => {
+    const unsub = subscribeToInquiries((list) => {
+      setNewInquiryCount(list.filter((i) => i.status === "new").length);
+    });
+    return () => unsub();
+  }, []);
 
   const isActive = (href: string, exact?: boolean) =>
     exact ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
@@ -37,6 +48,8 @@ export function AdminSidebar({ user }: { user: User }) {
           {NAV.map((item) => {
             const active = isActive(item.href, item.exact);
             const Icon = item.icon;
+            const showBadge =
+              item.href === "/admin/inquiries" && newInquiryCount > 0;
             return (
               <li key={item.href}>
                 <Link
@@ -49,7 +62,15 @@ export function AdminSidebar({ user }: { user: User }) {
                   }
                 >
                   <Icon className="h-[18px] w-[18px]" />
-                  <span>{item.label}</span>
+                  <span className="flex-1">{item.label}</span>
+                  {showBadge && (
+                    <span
+                      className="inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-full text-[11px] font-semibold text-black tabular-nums"
+                      style={{ background: "var(--accent)" }}
+                    >
+                      {newInquiryCount}
+                    </span>
+                  )}
                 </Link>
               </li>
             );
@@ -113,6 +134,14 @@ function UserIcon(props: React.SVGProps<SVGSVGElement>) {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
       <circle cx="12" cy="8" r="4" />
       <path d="M4 21c0-4 4-6 8-6s8 2 8 6" />
+    </svg>
+  );
+}
+function InboxIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...props}>
+      <path d="M22 12h-6l-2 3h-4l-2-3H2" />
+      <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z" />
     </svg>
   );
 }
