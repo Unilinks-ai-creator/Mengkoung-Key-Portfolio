@@ -23,14 +23,164 @@ import {
 type Status = "idle" | "submitting" | "success" | "error";
 
 /* ------------------------------------------------------------------ */
-/* Wizard                                                              */
+/* Step metadata                                                       */
 /* ------------------------------------------------------------------ */
 
 const STEPS = [
-  { id: 0, label: "The project" },
-  { id: 1, label: "The details" },
-  { id: 2, label: "Review & send" },
+  {
+    id: 0,
+    title: "The Project",
+    description: "What do you want to build?",
+  },
+  {
+    id: 1,
+    title: "The Details",
+    description: "Tell me more about it",
+  },
+  {
+    id: 2,
+    title: "Review & Send",
+    description: "Almost done!",
+  },
 ] as const;
+
+const STEP_HEADLINES = [
+  {
+    title: "What do you want to build?",
+    subtitle: "Choose one or more options to get started.",
+  },
+  {
+    title: "Tell me more about it.",
+    subtitle: "The details help me come back with a realistic plan.",
+  },
+  {
+    title: "Almost there — one last look.",
+    subtitle: "Review what you're sending, then hit send.",
+  },
+] as const;
+
+/* ------------------------------------------------------------------ */
+/* Icons                                                               */
+/* ------------------------------------------------------------------ */
+
+const ICON_CLS = "w-7 h-7 md:w-8 md:h-8";
+const SECTION_ICON_CLS = "w-4 h-4";
+const ICON_STROKE = { strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+
+function PhoneIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <rect x="6" y="2.5" width="12" height="19" rx="2.5" />
+      <path d="M11 18h2" />
+    </svg>
+  );
+}
+function GlobeIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18" />
+      <path d="M12 3a13 13 0 0 1 0 18 13 13 0 0 1 0-18" />
+    </svg>
+  );
+}
+function LaptopIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <rect x="3" y="5" width="18" height="12" rx="1.5" />
+      <path d="M2 20h20" />
+    </svg>
+  );
+}
+function ServerIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <rect x="3" y="4" width="18" height="7" rx="1.5" />
+      <rect x="3" y="13" width="18" height="7" rx="1.5" />
+      <path d="M7 7.5h.01M7 16.5h.01" />
+    </svg>
+  );
+}
+function HelpIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9.5 9.5a2.5 2.5 0 0 1 5 0c0 1.5-2.5 2-2.5 3.5" />
+      <path d="M12 17h.01" />
+    </svg>
+  );
+}
+function GridIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <rect x="4" y="4" width="7" height="7" rx="1" />
+      <rect x="13" y="4" width="7" height="7" rx="1" />
+      <rect x="4" y="13" width="7" height="7" rx="1" />
+      <rect x="13" y="13" width="7" height="7" rx="1" />
+    </svg>
+  );
+}
+function BulbIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <path d="M9 18h6" />
+      <path d="M10 21h4" />
+      <path d="M12 3a6 6 0 0 1 4 10.5c-.6.6-1 1.4-1 2.2V17H9v-1.3c0-.8-.4-1.6-1-2.2A6 6 0 0 1 12 3Z" />
+    </svg>
+  );
+}
+function DocIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+      <path d="M14 3v6h6" />
+      <path d="M8 13h8M8 17h5" />
+    </svg>
+  );
+}
+function CoinIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v10M15 9.5c-.5-1-1.7-1.5-3-1.5s-3 .7-3 2 1.5 2 3 2 3 .7 3 2-1.5 2-3 2-2.5-.5-3-1.5" />
+    </svg>
+  );
+}
+function ClockIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </svg>
+  );
+}
+function UserIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...ICON_STROKE} {...p}>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21c0-4 4-6 8-6s8 2 8 6" />
+    </svg>
+  );
+}
+function CheckIcon(p: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <path d="M3 8.5L6.5 12L13 4.5" />
+    </svg>
+  );
+}
+
+const PROJECT_TYPE_ICONS: Record<ProjectType, React.FC<React.SVGProps<SVGSVGElement>>> = {
+  "mobile-app": PhoneIcon,
+  "web-app": GlobeIcon,
+  website: LaptopIcon,
+  system: ServerIcon,
+  "not-sure": HelpIcon,
+};
+
+/* ------------------------------------------------------------------ */
+/* Main component                                                      */
+/* ------------------------------------------------------------------ */
 
 export function ContactForm() {
   const mountedAt = useRef<number>(0);
@@ -96,8 +246,6 @@ export function ContactForm() {
     source: typeof window !== "undefined" ? window.location.href : undefined,
   });
 
-  /* ---- Per-step validation gates ---------------------------------- */
-
   const validateStep1 = (): boolean => {
     const errs: Record<string, string> = {};
     if (projectTypes.length === 0) errs.projectTypes = "Pick at least one.";
@@ -144,21 +292,17 @@ export function ContactForm() {
   };
 
   const jumpTo = (target: 0 | 1 | 2) => {
-    // Only let user jump backwards or to already-validated step
     if (target < step) {
       setStepErrors({});
       setStep(target);
     }
   };
 
-  /* ---- Submit ------------------------------------------------------ */
-
   const handleSubmit = async () => {
     const input = buildInput();
     const validation = validateInquiry(input);
 
     if (validation.website === "spam" || validation.elapsedMs === "too-fast") {
-      // Silent-success for bots
       setStatus("success");
       return;
     }
@@ -167,7 +311,6 @@ export function ContactForm() {
     delete realErrors.website;
     delete realErrors.elapsedMs;
     if (Object.keys(realErrors).length > 0) {
-      // Shouldn't happen (we gate each step), but recover gracefully
       setServerError("Please check the previous steps.");
       setStatus("error");
       return;
@@ -207,16 +350,14 @@ export function ContactForm() {
     mountedAt.current = Date.now();
   };
 
-  /* ---- Success state ---------------------------------------------- */
-
   if (status === "success") {
     return <SuccessCard onReset={resetForm} />;
   }
 
-  /* ---- Shell ------------------------------------------------------- */
+  const headline = STEP_HEADLINES[step];
 
   return (
-    <div className="relative rounded-[24px] border border-border bg-fg/[0.02] p-6 md:p-10 max-w-2xl mx-auto text-left">
+    <div className="relative rounded-[28px] md:rounded-[32px] border border-border bg-fg/[0.015] overflow-hidden max-w-6xl mx-auto">
       {/* Honeypot */}
       <div
         aria-hidden
@@ -234,102 +375,127 @@ export function ContactForm() {
         </label>
       </div>
 
-      <StepIndicator current={step} onJump={jumpTo} />
-
-      <div className="mt-7 md:mt-9 min-h-[380px]">
-        <AnimatePresence mode="wait">
-          {step === 0 && (
-            <motion.div
-              key="s0"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <Step1Project
-                projectTypes={projectTypes}
-                onToggleProjectType={toggleProjectType}
-                stage={stage}
-                onStageChange={setStage}
-                message={message}
-                onMessageChange={setMessage}
-                errors={stepErrors}
-              />
-            </motion.div>
-          )}
-
-          {step === 1 && (
-            <motion.div
-              key="s1"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <Step2Details
-                budgetSkipped={budgetSkipped}
-                onBudgetSkipChange={setBudgetSkipped}
-                budgetAmount={budgetAmount}
-                onBudgetAmountChange={setBudgetAmount}
-                budgetCurrency={budgetCurrency}
-                onBudgetCurrencyChange={setBudgetCurrency}
-                timeline={timeline}
-                onTimelineChange={setTimeline}
-                timelineCustom={timelineCustom}
-                onTimelineCustomChange={setTimelineCustom}
-                name={name}
-                onNameChange={setName}
-                email={email}
-                onEmailChange={setEmail}
-                company={company}
-                onCompanyChange={setCompany}
-                errors={stepErrors}
-              />
-            </motion.div>
-          )}
-
-          {step === 2 && (
-            <motion.div
-              key="s2"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <Step3Review
-                projectTypes={projectTypes}
-                stage={stage as ProjectStage}
-                message={message}
-                budget={budget}
-                timeline={timeline}
-                timelineCustom={timelineCustom}
-                name={name}
-                email={email}
-                company={company}
-                onEditProject={() => jumpTo(0)}
-                onEditDetails={() => jumpTo(1)}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+      {/* Mobile — horizontal step pill */}
+      <div className="md:hidden px-6 pt-6">
+        <StepPill step={step} />
       </div>
 
-      {serverError && (
-        <p className="mt-5 text-[13.5px] text-red-500">{serverError}</p>
-      )}
+      <div className="grid md:grid-cols-[260px_1fr] lg:grid-cols-[300px_1fr]">
+        {/* Left — vertical stepper (desktop) */}
+        <aside className="hidden md:block border-r border-border bg-fg/[0.02] p-8 lg:p-10">
+          <VerticalStepper current={step} onJump={jumpTo} />
+        </aside>
 
-      <StepNav
-        step={step}
-        submitting={status === "submitting"}
-        onBack={goBack}
-        onNext={goNext}
-        onSubmit={handleSubmit}
-      />
+        {/* Right — content */}
+        <div className="p-6 md:p-10 lg:p-14 min-h-[560px] flex flex-col">
+          {/* Headline */}
+          <div className="hidden md:block">
+            <StepPill step={step} />
+          </div>
+          <h2 className="mt-5 md:mt-6 text-[28px] sm:text-[36px] md:text-[44px] lg:text-[52px] font-semibold leading-[1.05] tracking-[-0.025em]">
+            {headline.title}
+          </h2>
+          <p className="mt-3 md:mt-4 text-[15px] md:text-[17px] text-muted max-w-xl">
+            {headline.subtitle}
+          </p>
+
+          {/* Step body */}
+          <div className="mt-8 md:mt-10 flex-1">
+            <AnimatePresence mode="wait">
+              {step === 0 && (
+                <motion.div
+                  key="s0"
+                  initial={{ opacity: 0, x: 16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -16 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Step1Project
+                    projectTypes={projectTypes}
+                    onToggleProjectType={toggleProjectType}
+                    stage={stage}
+                    onStageChange={setStage}
+                    message={message}
+                    onMessageChange={setMessage}
+                    errors={stepErrors}
+                  />
+                </motion.div>
+              )}
+
+              {step === 1 && (
+                <motion.div
+                  key="s1"
+                  initial={{ opacity: 0, x: 16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -16 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Step2Details
+                    budgetSkipped={budgetSkipped}
+                    onBudgetSkipChange={setBudgetSkipped}
+                    budgetAmount={budgetAmount}
+                    onBudgetAmountChange={setBudgetAmount}
+                    budgetCurrency={budgetCurrency}
+                    onBudgetCurrencyChange={setBudgetCurrency}
+                    timeline={timeline}
+                    onTimelineChange={setTimeline}
+                    timelineCustom={timelineCustom}
+                    onTimelineCustomChange={setTimelineCustom}
+                    name={name}
+                    onNameChange={setName}
+                    email={email}
+                    onEmailChange={setEmail}
+                    company={company}
+                    onCompanyChange={setCompany}
+                    errors={stepErrors}
+                  />
+                </motion.div>
+              )}
+
+              {step === 2 && (
+                <motion.div
+                  key="s2"
+                  initial={{ opacity: 0, x: 16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -16 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Step3Review
+                    projectTypes={projectTypes}
+                    stage={stage as ProjectStage}
+                    message={message}
+                    budget={budget}
+                    timeline={timeline}
+                    timelineCustom={timelineCustom}
+                    name={name}
+                    email={email}
+                    company={company}
+                    onEditProject={() => jumpTo(0)}
+                    onEditDetails={() => jumpTo(1)}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {serverError && (
+            <p className="mt-5 text-[13.5px] text-red-500">{serverError}</p>
+          )}
+
+          <StepNav
+            step={step}
+            submitting={status === "submitting"}
+            onBack={goBack}
+            onNext={goNext}
+            onSubmit={handleSubmit}
+          />
+        </div>
+      </div>
 
       {step === 2 && (
-        <p className="mt-5 text-[12.5px] text-muted text-center">
-          By submitting you agree I may email you back. No spam, no list — just
-          a reply.
+        <p className="px-6 md:px-10 pb-6 md:pb-8 text-[12.5px] text-muted text-center">
+          By submitting you agree I may email you back. No spam, no list — just a
+          reply.
         </p>
       )}
     </div>
@@ -337,10 +503,29 @@ export function ContactForm() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Step indicator                                                      */
+/* Stepper bits                                                        */
 /* ------------------------------------------------------------------ */
 
-function StepIndicator({
+function StepPill({ step }: { step: 0 | 1 | 2 }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] md:text-[13px] font-medium"
+      style={{
+        background: "color-mix(in oklab, var(--accent) 18%, transparent)",
+        color: "color-mix(in oklab, var(--accent) 90%, var(--fg))",
+      }}
+    >
+      <span
+        aria-hidden
+        className="inline-block w-1.5 h-1.5 rounded-full"
+        style={{ background: "var(--accent)" }}
+      />
+      Step {step + 1} of 3
+    </span>
+  );
+}
+
+function VerticalStepper({
   current,
   onJump,
 }: {
@@ -348,64 +533,56 @@ function StepIndicator({
   onJump: (target: 0 | 1 | 2) => void;
 }) {
   return (
-    <div className="flex items-center gap-3">
+    <ol className="relative">
+      {/* vertical connecting line */}
+      <span
+        aria-hidden
+        className="absolute left-[14px] top-5 bottom-5 w-px"
+        style={{ background: "color-mix(in oklab, var(--fg) 15%, transparent)" }}
+      />
+
       {STEPS.map((s, i) => {
         const active = i === current;
         const done = i < current;
+        const disabled = !done && !active;
         return (
-          <div key={s.id} className="flex items-center gap-3 flex-1">
-            <button
-              type="button"
-              onClick={() => onJump(i as 0 | 1 | 2)}
-              disabled={!done && !active}
-              className={`shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-full text-[12px] font-semibold transition-all ${
+          <li
+            key={s.id}
+            className={`relative mb-10 last:mb-0 flex items-start gap-4 ${
+              disabled ? "" : "cursor-pointer"
+            }`}
+            onClick={() => !disabled && onJump(i as 0 | 1 | 2)}
+          >
+            <span
+              className={`relative z-10 shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-full text-[12px] font-semibold transition-all ${
                 active
                   ? "bg-fg text-bg"
                   : done
-                    ? "text-bg cursor-pointer hover:scale-105"
-                    : "border border-border text-muted"
+                    ? "text-black"
+                    : "border border-border bg-bg text-muted"
               }`}
               style={done ? { background: "var(--accent)" } : undefined}
-              aria-label={`Step ${i + 1}: ${s.label}`}
             >
-              {done ? (
-                <svg
-                  viewBox="0 0 16 16"
-                  className="w-3.5 h-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.25"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 8.5L6.5 12L13 4.5" />
-                </svg>
-              ) : (
-                i + 1
-              )}
-            </button>
-            <div className="hidden sm:block flex-1 min-w-0">
+              {done ? <CheckIcon className="w-3.5 h-3.5" /> : i + 1}
+            </span>
+            <div className="pt-0.5">
               <p
-                className={`text-[11px] md:text-[12px] tracking-[0.18em] uppercase truncate ${
-                  active ? "text-fg font-medium" : "text-muted"
+                className={`text-[14px] md:text-[15px] font-semibold tracking-[-0.01em] ${
+                  active || done ? "text-fg" : "text-muted"
                 }`}
               >
-                {s.label}
+                {s.title}
+              </p>
+              <p className="mt-1 text-[12.5px] md:text-[13px] text-muted leading-[1.4] max-w-[200px]">
+                {s.description}
               </p>
             </div>
-            {i < STEPS.length - 1 && (
-              <div className="hidden sm:block flex-1 h-px bg-border" />
-            )}
-          </div>
+          </li>
         );
       })}
-    </div>
+    </ol>
   );
 }
-
-/* ------------------------------------------------------------------ */
-/* Step navigation (Back / Continue / Send)                            */
-/* ------------------------------------------------------------------ */
 
 function StepNav({
   step,
@@ -424,7 +601,7 @@ function StepNav({
   const canBack = step > 0;
 
   return (
-    <div className="mt-8 flex items-center justify-between gap-4">
+    <div className="mt-10 md:mt-12 pt-6 border-t border-border flex items-center justify-between gap-4">
       {canBack ? (
         <button
           type="button"
@@ -512,7 +689,7 @@ function StepNav({
 }
 
 /* ------------------------------------------------------------------ */
-/* Step 1 — Project (types + stage + brief)                            */
+/* Step 1 — The Project                                                */
 /* ------------------------------------------------------------------ */
 
 function Step1Project({
@@ -533,67 +710,91 @@ function Step1Project({
   errors: Record<string, string>;
 }) {
   return (
-    <div className="space-y-7 md:space-y-8">
-      <Field
-        label="What do you want to build?"
-        required
-        hint="Pick one or more"
-        error={errors.projectTypes}
-      >
-        <div className="flex flex-wrap gap-2">
+    <div className="space-y-9 md:space-y-10">
+      {/* Your goal — icon tiles */}
+      <section>
+        <SectionLabel icon={<GridIcon className={SECTION_ICON_CLS} />}>
+          Your goal
+        </SectionLabel>
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
           {PROJECT_TYPES.map((t) => {
+            const Icon = PROJECT_TYPE_ICONS[t.value];
             const selected = projectTypes.includes(t.value);
             return (
-              <ChipButton
+              <IconTile
                 key={t.value}
                 selected={selected}
                 onClick={() => onToggleProjectType(t.value)}
-              >
-                {t.label}
-              </ChipButton>
+                icon={<Icon className={ICON_CLS} />}
+                label={t.label}
+              />
             );
           })}
         </div>
-      </Field>
+        {errors.projectTypes && (
+          <p className="mt-2 text-[12.5px] text-red-500">
+            {errors.projectTypes}
+          </p>
+        )}
+      </section>
 
-      <Field label="Where are you at?" required error={errors.stage}>
-        <div className="flex flex-wrap gap-2">
+      {/* Where are you at — pill chips */}
+      <section>
+        <SectionLabel icon={<BulbIcon className={SECTION_ICON_CLS} />}>
+          Where are you at?
+        </SectionLabel>
+        <div className="mt-4 flex flex-wrap gap-2 md:gap-2.5">
           {PROJECT_STAGES.map((s) => {
             const selected = stage === s.value;
             return (
-              <ChipButton
+              <PillChip
                 key={s.value}
                 selected={selected}
                 onClick={() => onStageChange(s.value)}
               >
                 {s.label}
-              </ChipButton>
+              </PillChip>
             );
           })}
         </div>
-      </Field>
+        {errors.stage && (
+          <p className="mt-2 text-[12.5px] text-red-500">{errors.stage}</p>
+        )}
+      </section>
 
-      <Field
-        label="Brief — what are you trying to solve?"
-        required
-        hint={`${message.trim().length} / 2000 · min 30`}
-        error={errors.message}
-      >
-        <textarea
-          value={message}
-          onChange={(e) => onMessageChange(e.target.value)}
-          rows={6}
-          maxLength={2000}
-          className={`${inputCls(!!errors.message)} resize-y min-h-[140px]`}
-          placeholder="The problem, the users, the outcome you want. Links to Figma / Notion / inspiration welcome."
-        />
-      </Field>
+      {/* Brief */}
+      <section>
+        <SectionLabel icon={<DocIcon className={SECTION_ICON_CLS} />}>
+          Brief — what are you trying to solve?
+        </SectionLabel>
+        <div className="mt-4">
+          <textarea
+            value={message}
+            onChange={(e) => onMessageChange(e.target.value)}
+            rows={6}
+            maxLength={2000}
+            className={`${inputCls(!!errors.message)} resize-y min-h-[160px]`}
+            placeholder="The problem, the users, the outcome you want. Links to Figma / Notion / inspiration welcome."
+          />
+          <div className="mt-2 flex items-center justify-between">
+            {errors.message ? (
+              <p className="text-[12.5px] text-red-500">{errors.message}</p>
+            ) : (
+              <span />
+            )}
+            <p className="text-[12px] text-muted tabular-nums">
+              {message.trim().length} / 2000{" "}
+              <span className="opacity-60">· min 30</span>
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* Step 2 — Details (budget + timeline + identity)                     */
+/* Step 2 — The Details                                                */
 /* ------------------------------------------------------------------ */
 
 function Step2Details({
@@ -637,11 +838,14 @@ function Step2Details({
     CURRENCIES.find((c) => c.value === budgetCurrency) ?? CURRENCIES[0];
 
   return (
-    <div className="space-y-7 md:space-y-8">
+    <div className="space-y-9 md:space-y-10">
       {/* Budget */}
-      <Field label="Budget" required error={errors.budgetAmount}>
-        {/* Currency picker — chip row, not a cramped select */}
-        <div className="flex flex-wrap gap-1.5 mb-3">
+      <section>
+        <SectionLabel icon={<CoinIcon className={SECTION_ICON_CLS} />}>
+          Budget
+        </SectionLabel>
+
+        <div className="mt-4 flex flex-wrap gap-1.5">
           {CURRENCIES.map((c) => {
             const selected = budgetCurrency === c.value;
             return (
@@ -664,10 +868,9 @@ function Step2Details({
           })}
         </div>
 
-        {/* Amount — full-width, with the currency symbol as prefix */}
-        <div className="relative">
+        <div className="mt-3 relative">
           {currencyMeta.symbol && !budgetSkipped && (
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[15px] md:text-[16px] font-semibold text-fg/70 pointer-events-none">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[16px] md:text-[18px] font-semibold text-fg/70 pointer-events-none">
               {currencyMeta.symbol}
             </span>
           )}
@@ -690,7 +893,9 @@ function Step2Details({
             className={`${inputCls(!!errors.budgetAmount)} ${
               currencyMeta.symbol && !budgetSkipped ? "pl-10" : ""
             } text-[16px] md:text-[18px] font-medium tabular-nums disabled:opacity-40`}
-            placeholder={budgetSkipped ? "Skipped — open to discuss" : "e.g. 15,000"}
+            placeholder={
+              budgetSkipped ? "Skipped — open to discuss" : "e.g. 15,000"
+            }
           />
         </div>
 
@@ -704,15 +909,23 @@ function Step2Details({
         >
           {budgetSkipped ? "Enter an amount instead" : "Not sure yet? Skip"}
         </button>
-      </Field>
+        {errors.budgetAmount && (
+          <p className="mt-1.5 text-[12.5px] text-red-500">
+            {errors.budgetAmount}
+          </p>
+        )}
+      </section>
 
-      {/* Timeline — chip row + custom input when "Custom" is selected */}
-      <Field label="Timeline" error={errors.timelineCustom ?? errors.timeline}>
-        <div className="flex flex-wrap gap-2">
+      {/* Timeline */}
+      <section>
+        <SectionLabel icon={<ClockIcon className={SECTION_ICON_CLS} />}>
+          Timeline
+        </SectionLabel>
+        <div className="mt-4 flex flex-wrap gap-2 md:gap-2.5">
           {TIMELINES.filter((t) => t.value !== "").map((t) => {
             const selected = timeline === t.value;
             return (
-              <ChipButton
+              <PillChip
                 key={t.value}
                 selected={selected}
                 onClick={() => {
@@ -726,7 +939,7 @@ function Step2Details({
                 }}
               >
                 {t.label}
-              </ChipButton>
+              </PillChip>
             );
           })}
         </div>
@@ -750,43 +963,49 @@ function Step2Details({
             />
           </motion.div>
         )}
-      </Field>
+        {errors.timelineCustom && (
+          <p className="mt-2 text-[12.5px] text-red-500">
+            {errors.timelineCustom}
+          </p>
+        )}
+      </section>
 
-      {/* Name + Email */}
-      <div className="grid gap-5 md:grid-cols-2">
-        <Field label="Your name" required error={errors.name}>
-          <input
-            type="text"
+      {/* About you */}
+      <section>
+        <SectionLabel icon={<UserIcon className={SECTION_ICON_CLS} />}>
+          About you
+        </SectionLabel>
+        <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <TextField
+            label="Your name"
+            required
             value={name}
-            onChange={(e) => onNameChange(e.target.value)}
+            onChange={onNameChange}
             autoComplete="name"
-            className={inputCls(!!errors.name)}
             placeholder="e.g. Sophia Nguyen"
+            error={errors.name}
           />
-        </Field>
-        <Field label="Your email" required error={errors.email}>
-          <input
+          <TextField
+            label="Your email"
+            required
             type="email"
             value={email}
-            onChange={(e) => onEmailChange(e.target.value)}
+            onChange={onEmailChange}
             autoComplete="email"
-            className={inputCls(!!errors.email)}
             placeholder="e.g. sophia@getwavy.app"
+            error={errors.email}
           />
-        </Field>
-      </div>
-
-      {/* Company / Role */}
-      <Field label="Company / role">
-        <input
-          type="text"
-          value={company}
-          onChange={(e) => onCompanyChange(e.target.value)}
-          autoComplete="organization"
-          className={inputCls(false)}
-          placeholder="e.g. Head of Product at Wavy"
-        />
-      </Field>
+          <div className="md:col-span-2">
+            <TextField
+              label="Company / role"
+              value={company}
+              onChange={onCompanyChange}
+              autoComplete="organization"
+              placeholder="e.g. Head of Product at Wavy"
+            />
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
@@ -821,17 +1040,12 @@ function Step3Review({
   onEditDetails: () => void;
 }) {
   return (
-    <div className="space-y-6">
-      <div>
-        <p className="text-[13px] md:text-[14px] text-muted">
-          You&apos;re sending this to{" "}
-          <span className="text-fg font-medium">Mengkoung Key</span>. Have one
-          last look before you hit send.
-        </p>
-      </div>
-
-      {/* The project */}
-      <ReviewBlock label="The project" onEdit={onEditProject}>
+    <div className="space-y-5">
+      <ReviewBlock
+        label="The project"
+        icon={<GridIcon className={SECTION_ICON_CLS} />}
+        onEdit={onEditProject}
+      >
         <ReviewRow label="Building">
           {projectTypes.map(projectTypeLabel).join(" · ") || "—"}
         </ReviewRow>
@@ -843,8 +1057,11 @@ function Step3Review({
         </ReviewRow>
       </ReviewBlock>
 
-      {/* The details */}
-      <ReviewBlock label="The details" onEdit={onEditDetails}>
+      <ReviewBlock
+        label="The details"
+        icon={<CoinIcon className={SECTION_ICON_CLS} />}
+        onEdit={onEditDetails}
+      >
         <ReviewRow label="Budget">
           <span className="tabular-nums font-medium">
             {formatBudget(budget)}
@@ -855,8 +1072,7 @@ function Step3Review({
         </ReviewRow>
         <ReviewRow label="From">
           <span>
-            {name}{" "}
-            <span className="text-muted">· {email}</span>
+            {name} <span className="text-muted">· {email}</span>
           </span>
         </ReviewRow>
         {company && <ReviewRow label="Role">{company}</ReviewRow>}
@@ -867,19 +1083,22 @@ function Step3Review({
 
 function ReviewBlock({
   label,
+  icon,
   onEdit,
   children,
 }: {
   label: string;
+  icon: React.ReactNode;
   onEdit: () => void;
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[16px] border border-border bg-bg p-5 md:p-6">
+    <div className="rounded-[18px] border border-border bg-bg p-5 md:p-6">
       <div className="flex items-center justify-between mb-4">
-        <p className="text-[11px] md:text-[12px] tracking-[0.22em] uppercase text-muted">
-          {label}
-        </p>
+        <div className="inline-flex items-center gap-2 text-[13px] md:text-[14px] font-semibold text-fg">
+          <span className="text-muted">{icon}</span>
+          <span>{label}</span>
+        </div>
         <button
           type="button"
           onClick={onEdit}
@@ -911,7 +1130,7 @@ function ReviewRow({
   if (vertical) {
     return (
       <div>
-        <p className="text-[11px] text-muted uppercase tracking-[0.18em] mb-2">
+        <p className="text-[11.5px] text-muted uppercase tracking-[0.18em] mb-2">
           {label}
         </p>
         {children}
@@ -938,7 +1157,7 @@ function SuccessCard({ onReset }: { onReset: () => void }) {
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-      className="relative rounded-[24px] border border-border bg-fg/[0.02] p-10 md:p-14 text-center max-w-2xl mx-auto"
+      className="relative rounded-[28px] border border-border bg-fg/[0.015] p-10 md:p-16 text-center max-w-2xl mx-auto"
     >
       <motion.div
         initial={{ scale: 0.6, opacity: 0 }}
@@ -947,19 +1166,8 @@ function SuccessCard({ onReset }: { onReset: () => void }) {
         className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full mb-6 md:mb-8"
         style={{ background: "var(--accent)" }}
       >
-        <svg
-          viewBox="0 0 24 24"
-          className="w-8 h-8 md:w-10 md:h-10 text-black"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M4 12.5L10 18.5L20 6" />
-        </svg>
+        <CheckIcon className="w-8 h-8 md:w-10 md:h-10 text-black" />
       </motion.div>
-
       <h2 className="text-[26px] md:text-[32px] font-semibold tracking-[-0.02em]">
         Got it. Message received.
       </h2>
@@ -967,7 +1175,6 @@ function SuccessCard({ onReset }: { onReset: () => void }) {
         I&apos;ll come back to you personally within 24 hours — from the
         email you entered. Check your spam folder if you don&apos;t see it.
       </p>
-
       <button
         type="button"
         onClick={onReset}
@@ -983,43 +1190,73 @@ function SuccessCard({ onReset }: { onReset: () => void }) {
 /* Shared primitives                                                   */
 /* ------------------------------------------------------------------ */
 
-function Field({
-  label,
-  required,
-  hint,
-  error,
+function SectionLabel({
+  icon,
   children,
 }: {
-  label: string;
-  required?: boolean;
-  hint?: string;
-  error?: string;
+  icon: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
-    <label className="block">
-      <span className="flex items-center justify-between gap-2 mb-2">
-        <span className="text-[11px] md:text-[12px] tracking-[0.18em] uppercase text-muted">
-          {label}
-          {required && (
-            <span className="ml-1" style={{ color: "var(--accent)" }}>
-              *
-            </span>
-          )}
-        </span>
-        {hint && (
-          <span className="text-[11px] text-muted/70 normal-case tracking-normal">
-            {hint}
-          </span>
-        )}
-      </span>
-      {children}
-      {error && <p className="mt-1.5 text-[12.5px] text-red-500">{error}</p>}
-    </label>
+    <div className="inline-flex items-center gap-2 text-[13px] md:text-[14px] font-semibold text-fg">
+      <span className="text-muted">{icon}</span>
+      <span>{children}</span>
+    </div>
   );
 }
 
-function ChipButton({
+function IconTile({
+  selected,
+  onClick,
+  icon,
+  label,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
+}) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: "spring", stiffness: 420, damping: 24 }}
+      className={`relative flex flex-col items-center justify-center gap-3 md:gap-4 h-28 md:h-32 rounded-[18px] md:rounded-[20px] border-2 bg-bg px-3 py-4 text-[13px] md:text-[14px] font-medium transition-colors ${
+        selected
+          ? "text-fg"
+          : "border-border text-fg hover:border-fg/30"
+      }`}
+      style={
+        selected
+          ? {
+              borderColor: "var(--accent)",
+              boxShadow: "0 10px 30px -16px color-mix(in oklab, var(--accent) 50%, transparent)",
+            }
+          : undefined
+      }
+      aria-pressed={selected}
+    >
+      <span className="text-fg/80">{icon}</span>
+      <span>{label}</span>
+      {selected && (
+        <motion.span
+          initial={{ scale: 0.6, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 320, damping: 20 }}
+          className="absolute top-2.5 right-2.5 inline-flex items-center justify-center w-5 h-5 rounded-full text-black"
+          style={{ background: "var(--accent)" }}
+          aria-hidden
+        >
+          <CheckIcon className="w-3 h-3" />
+        </motion.span>
+      )}
+    </motion.button>
+  );
+}
+
+function PillChip({
   selected,
   onClick,
   children,
@@ -1032,26 +1269,63 @@ function ChipButton({
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-medium border transition-all duration-200 ${
+      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13.5px] md:text-[14px] font-medium border transition-all ${
         selected
           ? "bg-fg text-bg border-fg"
           : "bg-bg text-fg border-border hover:border-fg/40"
       }`}
+      aria-pressed={selected}
     >
-      {selected && (
-        <span
-          aria-hidden
-          className="inline-block w-1.5 h-1.5 rounded-full"
-          style={{ background: "var(--accent)" }}
-        />
-      )}
+      {selected && <CheckIcon className="w-3.5 h-3.5" />}
       {children}
     </button>
   );
 }
 
+function TextField({
+  label,
+  required,
+  type = "text",
+  value,
+  onChange,
+  autoComplete,
+  placeholder,
+  error,
+}: {
+  label: string;
+  required?: boolean;
+  type?: string;
+  value: string;
+  onChange: (v: string) => void;
+  autoComplete?: string;
+  placeholder?: string;
+  error?: string;
+}) {
+  return (
+    <label className="block">
+      <span className="block text-[12px] md:text-[12.5px] font-medium text-muted mb-1.5">
+        {label}
+        {required && (
+          <span className="ml-1" style={{ color: "var(--accent)" }}>
+            *
+          </span>
+        )}
+      </span>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        autoComplete={autoComplete}
+        className={inputCls(!!error)}
+        placeholder={placeholder}
+      />
+      {error && <p className="mt-1.5 text-[12.5px] text-red-500">{error}</p>}
+    </label>
+  );
+}
+
 const baseInputCls =
-  "w-full rounded-[12px] border bg-bg px-4 py-3 text-[14.5px] text-fg placeholder:text-muted/60 focus:outline-none focus:border-fg/40 transition-colors";
+  "w-full rounded-[14px] border bg-bg px-4 py-3 text-[14.5px] text-fg placeholder:text-muted/60 focus:outline-none focus:border-fg/40 transition-colors";
 
 function inputCls(hasError: boolean) {
   return `${baseInputCls} ${hasError ? "border-red-400/60" : "border-border"}`;
