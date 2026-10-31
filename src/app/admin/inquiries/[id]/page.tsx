@@ -161,7 +161,9 @@ export default function InquiryDetailPage() {
             {formatBudget(inquiry.budget)}
           </span>
         </Meta>
-        <Meta label="Timeline">{timelineLabel(inquiry.timeline)}</Meta>
+        <Meta label="Timeline">
+          {timelineLabel(inquiry.timeline, inquiry.timelineCustom)}
+        </Meta>
         <Meta label="Submitted">
           {inquiry.createdAt?.toDate
             ? inquiry.createdAt.toDate().toLocaleString()

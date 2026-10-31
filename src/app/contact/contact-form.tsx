@@ -52,6 +52,7 @@ export function ContactForm() {
   const [budgetAmount, setBudgetAmount] = useState("");
   const [budgetCurrency, setBudgetCurrency] = useState<Currency>("USD");
   const [timeline, setTimeline] = useState<Timeline>("");
+  const [timelineCustom, setTimelineCustom] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
@@ -85,6 +86,8 @@ export function ContactForm() {
     stage: (stage || "idea") as ProjectStage,
     budget,
     timeline: timeline || undefined,
+    timelineCustom:
+      timeline === "custom" ? timelineCustom.trim() || undefined : undefined,
     message,
     website,
     elapsedMs: Date.now() - (mountedAt.current || Date.now()),
@@ -120,6 +123,9 @@ export function ContactForm() {
       if (!Number.isFinite(amountNum) || amountNum <= 0) {
         errs.budgetAmount = "Enter an amount, or tap “Not sure yet”.";
       }
+    }
+    if (timeline === "custom" && timelineCustom.trim().length < 2) {
+      errs.timelineCustom = "Tell me your timeline.";
     }
     setStepErrors(errs);
     return Object.keys(errs).length === 0;
@@ -194,6 +200,7 @@ export function ContactForm() {
     setBudgetAmount("");
     setBudgetCurrency("USD");
     setTimeline("");
+    setTimelineCustom("");
     setName("");
     setEmail("");
     setCompany("");
@@ -268,6 +275,8 @@ export function ContactForm() {
                 onBudgetCurrencyChange={setBudgetCurrency}
                 timeline={timeline}
                 onTimelineChange={setTimeline}
+                timelineCustom={timelineCustom}
+                onTimelineCustomChange={setTimelineCustom}
                 name={name}
                 onNameChange={setName}
                 email={email}
@@ -293,6 +302,7 @@ export function ContactForm() {
                 message={message}
                 budget={budget}
                 timeline={timeline}
+                timelineCustom={timelineCustom}
                 name={name}
                 email={email}
                 company={company}
@@ -595,6 +605,8 @@ function Step2Details({
   onBudgetCurrencyChange,
   timeline,
   onTimelineChange,
+  timelineCustom,
+  onTimelineCustomChange,
   name,
   onNameChange,
   email,
@@ -611,6 +623,8 @@ function Step2Details({
   onBudgetCurrencyChange: (v: Currency) => void;
   timeline: Timeline;
   onTimelineChange: (v: Timeline) => void;
+  timelineCustom: string;
+  onTimelineCustomChange: (v: string) => void;
   name: string;
   onNameChange: (v: string) => void;
   email: string;
@@ -692,8 +706,8 @@ function Step2Details({
         </button>
       </Field>
 
-      {/* Timeline — chip row for consistency */}
-      <Field label="Timeline" error={errors.timeline}>
+      {/* Timeline — chip row + custom input when "Custom" is selected */}
+      <Field label="Timeline" error={errors.timelineCustom ?? errors.timeline}>
         <div className="flex flex-wrap gap-2">
           {TIMELINES.filter((t) => t.value !== "").map((t) => {
             const selected = timeline === t.value;
@@ -701,13 +715,41 @@ function Step2Details({
               <ChipButton
                 key={t.value}
                 selected={selected}
-                onClick={() => onTimelineChange(selected ? "" : t.value)}
+                onClick={() => {
+                  if (selected) {
+                    onTimelineChange("");
+                    if (t.value === "custom") onTimelineCustomChange("");
+                  } else {
+                    onTimelineChange(t.value);
+                    if (t.value !== "custom") onTimelineCustomChange("");
+                  }
+                }}
               >
                 {t.label}
               </ChipButton>
             );
           })}
         </div>
+
+        {timeline === "custom" && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden"
+          >
+            <input
+              type="text"
+              value={timelineCustom}
+              onChange={(e) => onTimelineCustomChange(e.target.value)}
+              maxLength={120}
+              autoFocus
+              className={`${inputCls(!!errors.timelineCustom)} mt-3`}
+              placeholder="e.g. By end of Q2 2026, or in 18 months"
+            />
+          </motion.div>
+        )}
       </Field>
 
       {/* Name + Email */}
@@ -759,6 +801,7 @@ function Step3Review({
   message,
   budget,
   timeline,
+  timelineCustom,
   name,
   email,
   company,
@@ -770,6 +813,7 @@ function Step3Review({
   message: string;
   budget: NewInquiryInput["budget"];
   timeline: Timeline;
+  timelineCustom: string;
   name: string;
   email: string;
   company: string;
@@ -806,7 +850,9 @@ function Step3Review({
             {formatBudget(budget)}
           </span>
         </ReviewRow>
-        <ReviewRow label="Timeline">{timelineLabel(timeline)}</ReviewRow>
+        <ReviewRow label="Timeline">
+          {timelineLabel(timeline, timelineCustom)}
+        </ReviewRow>
         <ReviewRow label="From">
           <span>
             {name}{" "}

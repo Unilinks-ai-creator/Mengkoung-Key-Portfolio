@@ -95,6 +95,7 @@ export type Timeline =
   | "1-3-months"
   | "3-6-months"
   | "flexible"
+  | "custom"
   | "";
 
 export const TIMELINES: Array<{ value: Timeline; label: string }> = [
@@ -103,6 +104,7 @@ export const TIMELINES: Array<{ value: Timeline; label: string }> = [
   { value: "1-3-months", label: "In 1–3 months" },
   { value: "3-6-months", label: "In 3–6 months" },
   { value: "flexible", label: "Flexible" },
+  { value: "custom", label: "Custom" },
 ];
 
 export type Inquiry = {
@@ -116,6 +118,8 @@ export type Inquiry = {
   stage: ProjectStage;
   budget: Budget;
   timeline?: Timeline;
+  /** Free-text timeline — only set when `timeline === "custom"`. */
+  timelineCustom?: string;
   message: string;
   source?: string;
   userAgent?: string;
@@ -132,6 +136,8 @@ export type NewInquiryInput = {
   stage: ProjectStage;
   budget: Budget;
   timeline?: Timeline;
+  /** Free-text timeline — required when `timeline === "custom"`. */
+  timelineCustom?: string;
   message: string;
   source?: string;
   userAgent?: string;
@@ -213,6 +219,17 @@ export function validateInquiry(input: NewInquiryInput): ValidationErrors {
     errors.message = "That's a lot — keep it under 2,000 characters.";
   }
 
+  // Timeline — if "custom", the free-text must be non-empty.
+  if (input.timeline === "custom") {
+    const custom = (input.timelineCustom ?? "").trim();
+    if (custom.length < 2) {
+      errors.timelineCustom = "Tell me your timeline.";
+    }
+    if (custom.length > 120) {
+      errors.timelineCustom = "Keep it under 120 characters.";
+    }
+  }
+
   return errors;
 }
 
@@ -243,6 +260,9 @@ export async function createInquiry(input: NewInquiryInput): Promise<string> {
   if (company) payload.company = company;
 
   if (input.timeline) payload.timeline = input.timeline;
+  if (input.timeline === "custom" && input.timelineCustom) {
+    payload.timelineCustom = input.timelineCustom.trim();
+  }
   if (input.source) payload.source = input.source;
   if (input.userAgent) payload.userAgent = input.userAgent;
 
@@ -318,8 +338,9 @@ export function stageLabel(value: ProjectStage): string {
   return PROJECT_STAGES.find((s) => s.value === value)?.label ?? value;
 }
 
-export function timelineLabel(value?: Timeline): string {
+export function timelineLabel(value?: Timeline, custom?: string): string {
   if (!value) return "—";
+  if (value === "custom") return custom?.trim() || "Custom";
   return TIMELINES.find((t) => t.value === value)?.label ?? value;
 }
 

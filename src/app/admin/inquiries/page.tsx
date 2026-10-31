@@ -168,7 +168,8 @@ function InquiryRow({ inquiry }: { inquiry: Inquiry }) {
           <p className="mt-1.5 text-[13px] md:text-[14px] text-muted">
             {types} · {stageLabel(inquiry.stage)} ·{" "}
             {formatBudget(inquiry.budget)}
-            {inquiry.timeline && ` · ${timelineLabel(inquiry.timeline)}`}
+            {inquiry.timeline &&
+              ` · ${timelineLabel(inquiry.timeline, inquiry.timelineCustom)}`}
           </p>
 
           <p className="mt-2 text-[13.5px] text-fg/70 line-clamp-2">
