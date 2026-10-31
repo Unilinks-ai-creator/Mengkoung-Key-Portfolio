@@ -1051,7 +1051,7 @@ function Step3Review({
         </ReviewRow>
         <ReviewRow label="Stage">{stageLabel(stage)}</ReviewRow>
         <ReviewRow label="Brief" vertical>
-          <p className="text-[14.5px] md:text-[15px] leading-[1.65] text-fg whitespace-pre-wrap">
+          <p className="leading-[1.65] whitespace-pre-wrap">
             {message}
           </p>
         </ReviewRow>
@@ -1129,20 +1129,24 @@ function ReviewRow({
 }) {
   if (vertical) {
     return (
-      <div>
-        <p className="text-[11.5px] text-muted uppercase tracking-[0.18em] mb-2">
+      <div className="min-w-0">
+        <p className="text-[12.5px] md:text-[13px] text-muted font-medium mb-2">
           {label}
         </p>
-        {children}
+        <div className="text-[14.5px] md:text-[15px] text-fg break-words [overflow-wrap:anywhere]">
+          {children}
+        </div>
       </div>
     );
   }
   return (
-    <div className="grid grid-cols-[7rem_1fr] md:grid-cols-[9rem_1fr] gap-x-3 items-baseline">
-      <p className="text-[12px] text-muted uppercase tracking-[0.18em]">
+    <div className="grid grid-cols-[7rem_1fr] md:grid-cols-[9rem_1fr] gap-x-3 items-baseline min-w-0">
+      <p className="text-[12.5px] md:text-[13px] text-muted font-medium">
         {label}
       </p>
-      <div className="text-[14.5px] md:text-[15px] text-fg">{children}</div>
+      <div className="text-[14.5px] md:text-[15px] text-fg min-w-0 break-words [overflow-wrap:anywhere]">
+        {children}
+      </div>
     </div>
   );
 }
