@@ -250,10 +250,8 @@ export function ContactForm() {
     const errs: Record<string, string> = {};
     if (projectTypes.length === 0) errs.projectTypes = "Pick at least one.";
     if (!stage) errs.stage = "Pick where you're at.";
-    if (message.trim().length < 30)
-      errs.message = "A little more detail helps — at least 30 characters.";
-    if (message.trim().length > 2000)
-      errs.message = "Keep it under 2,000 characters.";
+    if (message.trim().length === 0)
+      errs.message = "Tell me a bit about what you're building.";
     setStepErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -509,7 +507,7 @@ export function ContactForm() {
 function StepPill({ step }: { step: 0 | 1 | 2 }) {
   return (
     <span
-      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] md:text-[13px] font-medium"
+      className="inline-flex items-center gap-1.5 rounded-[8px] px-3 py-1 text-[12px] md:text-[13px] font-medium"
       style={{
         background: "color-mix(in oklab, var(--accent) 18%, transparent)",
         color: "color-mix(in oklab, var(--accent) 90%, var(--fg))",
@@ -554,7 +552,7 @@ function VerticalStepper({
             onClick={() => !disabled && onJump(i as 0 | 1 | 2)}
           >
             <span
-              className={`relative z-10 shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-full text-[12px] font-semibold transition-all ${
+              className={`relative z-10 shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-[8px] text-[12px] font-semibold transition-all ${
                 active
                   ? "bg-fg text-bg"
                   : done
@@ -628,7 +626,7 @@ function StepNav({
         whileHover={{ scale: submitting ? 1 : 1.015, y: submitting ? 0 : -1 }}
         whileTap={{ scale: 0.985 }}
         transition={{ type: "spring", stiffness: 420, damping: 24 }}
-        className="group relative inline-flex items-center gap-3 rounded-full bg-fg text-bg pl-6 pr-2 py-2 md:pl-7 md:pr-2.5 md:py-2.5 text-[14px] md:text-[15px] font-medium shadow-[0_20px_50px_-20px_rgba(0,0,0,0.45)] disabled:opacity-70"
+        className="group relative inline-flex items-center gap-3 rounded-[14px] bg-fg text-bg pl-6 pr-2 py-2 md:pl-7 md:pr-2.5 md:py-2.5 text-[14px] md:text-[15px] font-medium shadow-[0_20px_50px_-20px_rgba(0,0,0,0.45)] disabled:opacity-70"
       >
         <span>
           <AnimatePresence mode="wait" initial={false}>
@@ -656,7 +654,7 @@ function StepNav({
           </AnimatePresence>
         </span>
         <span
-          className="inline-flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-full text-bg text-[14px] font-medium shrink-0"
+          className="inline-flex items-center justify-center w-9 h-9 md:w-10 md:h-10 rounded-[10px] text-bg text-[14px] font-medium shrink-0"
           style={{ background: "var(--accent)" }}
           aria-hidden
         >
@@ -772,21 +770,12 @@ function Step1Project({
             value={message}
             onChange={(e) => onMessageChange(e.target.value)}
             rows={6}
-            maxLength={2000}
             className={`${inputCls(!!errors.message)} resize-y min-h-[160px]`}
             placeholder="The problem, the users, the outcome you want. Links to Figma / Notion / inspiration welcome."
           />
-          <div className="mt-2 flex items-center justify-between">
-            {errors.message ? (
-              <p className="text-[12.5px] text-red-500">{errors.message}</p>
-            ) : (
-              <span />
-            )}
-            <p className="text-[12px] text-muted tabular-nums">
-              {message.trim().length} / 2000{" "}
-              <span className="opacity-60">· min 30</span>
-            </p>
-          </div>
+          {errors.message && (
+            <p className="mt-2 text-[12.5px] text-red-500">{errors.message}</p>
+          )}
         </div>
       </section>
     </div>
@@ -854,7 +843,7 @@ function Step2Details({
                 type="button"
                 onClick={() => onBudgetCurrencyChange(c.value)}
                 disabled={budgetSkipped}
-                className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-[12.5px] font-medium border transition-all disabled:opacity-40 ${
+                className={`inline-flex items-center gap-1 rounded-[8px] px-3 py-1 text-[12.5px] font-medium border transition-all disabled:opacity-40 ${
                   selected
                     ? "bg-fg text-bg border-fg"
                     : "bg-bg text-fg border-border hover:border-fg/40"
@@ -1273,7 +1262,7 @@ function PillChip({
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13.5px] md:text-[14px] font-medium border transition-all ${
+      className={`inline-flex items-center gap-2 rounded-[10px] px-4 py-2 text-[13.5px] md:text-[14px] font-medium border transition-all ${
         selected
           ? "bg-fg text-bg border-fg"
           : "bg-bg text-fg border-border hover:border-fg/40"

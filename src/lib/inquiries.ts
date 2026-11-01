@@ -212,11 +212,8 @@ export function validateInquiry(input: NewInquiryInput): ValidationErrors {
   }
 
   const message = (input.message ?? "").trim();
-  if (message.length < 30) {
-    errors.message = "A little more detail helps — at least 30 characters.";
-  }
-  if (message.length > 2000) {
-    errors.message = "That's a lot — keep it under 2,000 characters.";
+  if (message.length === 0) {
+    errors.message = "Tell me a bit about what you're building.";
   }
 
   // Timeline — if "custom", the free-text must be non-empty.
